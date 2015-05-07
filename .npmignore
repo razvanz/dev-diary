@@ -1,0 +1,13 @@
+# Dependencies
+node_modules
+
+# Git related files
+.git*
+
+# Config files
+.jsbeautifyrc
+.jshintrc
+.editorconfig
+
+# Tests
+specs

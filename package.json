@@ -1,0 +1,23 @@
+{
+  "name": "dev-diary",
+  "version": "0.0.1",
+  "description": "A web application aimed to help developers to better keep track of their work.",
+  "main": "./server/",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "node ./server/index.js",
+    "test": "node ./specs/run-specs.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/razvanz/dev-diary.git"
+  },
+  "author": "Razvan Laurus <razvan.laurus@gmail.com> (https://twitter.com/razvanz_)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/razvanz/dev-diary/issues"
+  },
+  "homepage": "https://github.com/razvanz/dev-diary#readme"
+}

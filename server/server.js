@@ -41,7 +41,7 @@ Server.prototype.configure = function () {
 
 Server.prototype.start = function (config) {
   this._server = expressConf(config)
-    .listen(config.port, config.host);
+    .listen(config.port);
 
   console.log('--');
   console.log(colors.bgGreen('Server started!'));

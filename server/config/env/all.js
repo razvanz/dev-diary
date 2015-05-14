@@ -6,9 +6,7 @@ module.exports = {
     description: 'Helping developers to better keep track of their work',
     keywords: '',
   },
-  host: '127.0.0.1',
-  port: process.env.PORT || 3000,
-  sslPort: process.env.SSL_PORT ||3001,
+  port: process.env.PORT || 8080,
   templateEngine: 'swig',
   session: {
     cookie: {

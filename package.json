@@ -1,6 +1,7 @@
 {
   "name": "dev-diary",
   "version": "0.0.1",
+  "private": true,
   "description": "A web application aimed to help developers to better keep track of their work.",
   "main": "./index.js",
   "directories": {

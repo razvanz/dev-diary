@@ -1,15 +1,18 @@
 'use strict';
 
-var server = require('./server/server');
+var fs = require('fs'),
+  spawn = require('child_process')
+  .spawn;
 
-server.on('configured', function (config) {
-  server.emit('start', config);
-});
+var services = ['project', 'note', 'devdiary-web'];
 
-server.emit('configure');
+services.forEach(function (service) {
+  var log = fs.createWriteStream('./log/' + service + '.log');
+  var proc = spawn('node', ['./src/' + service + '/']);
 
-process.on('SIGINT', function () {
-  process.nextTick(function () {
-    server.emit('shutdown', 0);
-  });
+  proc.stdout.pipe(log);
+  proc.stderr.pipe(log);
+
+  proc.stdout.pipe(process.stdout);
+  proc.stderr.pipe(process.stderr);
 });

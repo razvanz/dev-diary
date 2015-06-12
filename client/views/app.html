@@ -1,0 +1,41 @@
+{% extends 'layout.html' %} {% block content %}
+
+<template is="auto-binding" id="app">
+  <core-drawer-panel forceNarrow="true">
+    <core-header-panel drawer>
+      <core-toolbar>Projects</core-toolbar>
+      <core-menu selected="{{pageName}}" valueattr="project-name">
+        <core-item project-name="devdiary" label="Dev-Diary"></core-item>
+        <core-item project-name="masschat" label="Masschat"></core-item>
+        <core-item project-name="notosdb" label="NotosDB"></core-item>
+      </core-menu>
+    </core-header-panel>
+
+    <core-header-panel main>
+      <core-toolbar>
+        <paper-icon-button icon="menu" core-drawer-toggle></paper-icon-button>
+        <div flex>{{title}}</div>
+        <paper-menu-button>
+          <paper-icon-button class="menu-user-img" src="/images/logo.jpg"
+          noink></paper-icon-button>
+          <paper-dropdown class="dropdown" halign="right" layered>
+            <core-menu>
+              <paper-item>Share</paper-item>
+              <paper-item>Settings</paper-item>
+              <paper-item>Help</paper-item>
+            </core-menu>
+          </paper-dropdown>
+        </paper-menu-button>
+      </core-toolbar>
+      <div class="container" fit layout vertical>
+        <core-list data="{{data}}">
+          <template>
+            <div class="row">
+            </div>
+          </template>
+        </core-list>
+      </div>
+    </core-header-panel>
+  </core-drawer-panel>
+</template>
+{% endblock %}

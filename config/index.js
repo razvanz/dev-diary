@@ -9,45 +9,40 @@ function Config() {
   _.assign(this, require('./env/all'));
 }
 
-Config.prototype.init = function (cb) {
-  var self = this;
-
-  self.initEnv(function (err) {
-    if (err)
-      return cb(err);
-    else {
-      _.assign(self, require('./env/' + process.env.NODE_ENV) || {});
-      return cb(null, self);
-    }
-  });
+Config.prototype.init = function () {
+  return _.assign(this, this._getEnvConf());
 };
 
-Config.prototype.initEnv = function (cb) {
+Config.prototype._getEnvConf = function () {
   /**
    * We'll Look for a valid NODE_ENV variable and
    * if one cannot be found load the development NODE_ENV
    */
+  var pattern = './**/config/env/' + process.env.NODE_ENV + '.js',
+    config = {};
 
-  glob('./server/config/env/' + process.env.NODE_ENV + '.js',
-    function (err, files) {
-      if (err)
-        return cb(err);
-      else if (!files || files.length === 0) {
+  var filePath = this.getGlobbedFilesSync(pattern);
 
-        if (process.env.NODE_ENV) {
-          debug('No configuration file found for "%s" environment!'.bgYellow,
-            process.env.NODE_ENV);
-        } else {
-          debug('NODE_ENV is not defined!'.bgYellow);
-        }
+  if (!filePath || filePath.length === 0) {
+    if (process.env.NODE_ENV) {
+      debug('No configuration file found for "%s" environment!'.bgYellow,
+        process.env.NODE_ENV);
+    } else {
+      debug('NODE_ENV is not defined!'.bgYellow);
+    }
 
-        process.env.NODE_ENV = 'development';
-
-      }
-
-      debug('Using "%s" environment'.bgGreen, process.env.NODE_ENV);
-      return cb();
+    // Defaults to development
+    process.env.NODE_ENV = 'development';
+  } else if (filePath.length > 1) {
+    // Merge multiple config files;
+    _.forEach(filePath, function (path) {
+      config = _.assign(config, require(path) || {});
     });
+  } else {
+    config = _.assign(config, require(filePath) || {});
+  }
+
+  return config;
 };
 
 Config.prototype.getGlobbedFiles = function (patterns, removeRoot, cb) {
@@ -78,7 +73,7 @@ Config.prototype.getGlobbedFilesSync = function (patterns, removeRoot) {
 
   patterns = _.flattenDeep(patterns);
 
-  for (var i = patterns.length - 1; i >= 0; i--) {
+  for (var i = 0; i < patterns.length; i++) {
     result = _.union(result, this.spliceFromPaths(glob.sync(patterns[i], {
       sync: true
     }), removeRoot));
@@ -125,14 +120,19 @@ Config.prototype.spliceFromPaths = function (paths, splice) {
     });
 };
 
-Config.prototype.getJS = function () {
-  return this.getGlobbedFiles(_.union(this.assets.lib.js,
-    this.assets.js), this.jsRoot);
+Config.prototype.getCSS = function () {
+  return this.getGlobbedFiles(_.union(this.main.assets.lib.css,
+    this.main.assets.app.css), this.main.public);
 };
 
-Config.prototype.getCSS = function () {
-  return this.getGlobbedFiles(_.union(this.assets.lib.css,
-    this.assets.css), this.cssRoot);
+Config.prototype.getJS = function () {
+  return this.getGlobbedFiles(_.union(this.main.assets.lib.js,
+    this.main.assets.app.js), this.main.public);
+};
+
+Config.prototype.getTmpl = function () {
+  return this.getGlobbedFiles(_.union(this.main.assets.lib.tmpl,
+    this.main.assets.app.tmpl), this.main.public);
 };
 
 module.exports = new Config();

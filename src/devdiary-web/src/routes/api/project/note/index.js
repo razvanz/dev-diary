@@ -25,7 +25,7 @@ module.exports = function (app) {
           username: req.user.username,
           projectId: req.params.projectId
         }
-      }, req.query, function (err, notes) {
+      }, function (err, notes) {
         if (err)
           return next(err);
         else {

@@ -11,7 +11,7 @@ require('seneca')()
   .listen({
     type: 'rabbitmq',
     pin: {
-      webapi: 'note',
-      action: '*'
+      role: 'note',
+      cmd: '*'
     }
   });

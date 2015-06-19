@@ -52,7 +52,7 @@ module.exports = function (app) {
 
   app.route('/api/v1.0/project/:projectId')
     .get(function (req, res, next) {
-      return req.seneca.act('project: load', {
+      return req.seneca.act({
         role: 'project',
         cmd: 'load',
 
@@ -69,7 +69,7 @@ module.exports = function (app) {
       });
     })
     .put(function (req, res, next) {
-      return req.seneca.act('project: update', {
+      return req.seneca.act({
         role: 'project',
         cmd: 'update',
 
@@ -86,8 +86,8 @@ module.exports = function (app) {
       });
     })
     .delete(function (req, res, next) {
-      return req.seneca.act('project: remove', {
-        role: 'proejct',
+      return req.seneca.act({
+        role: 'project',
         cmd: 'remove',
 
         query: {

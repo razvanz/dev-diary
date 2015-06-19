@@ -10,44 +10,53 @@ module.exports = function (options) {
   options = seneca.util.deepextend({}, options || {});
 
   seneca.add({
-    'note': 'list'
+    role: plugin,
+    cmd: 'list',
+
+    query: {}
   }, listNotes);
 
   seneca.add({
-    'note': 'create',
+    role: plugin,
+    cmd: 'create',
 
     data: {}
   }, createNote);
 
   seneca.add({
-    'note': 'load',
+    role: plugin,
+    cmd: 'load',
 
     query: {}
   }, loadNote);
 
   seneca.add({
-    'note': 'update',
+    role: plugin,
+    cmd: 'update',
 
     data: {}
   }, updateNote);
 
   seneca.add({
-    'note': 'remove',
+    role: plugin,
+    cmd: 'remove',
 
     query: {}
   }, removeNote);
 
   function listNotes(argv, done) {
+    console.log('here');
     if (!argv.query.username || !argv.query.projectId)
       return done(new Error('Missing username or projectId'));
 
+    console.log('here');
     return seneca.make$('note')
       .list$(argv.query, done);
   }
 
   function createNote(argv, done) {
 
-    if (!argv.query.username || !argv.query.projectId)
+    if (!argv.data.username || !argv.data.projectId)
       return done(new Error('Missing username or projectId'));
 
     var note = seneca.make$('note');
@@ -68,7 +77,7 @@ module.exports = function (options) {
   }
 
   function updateNote(argv, done) {
-    if (!argv.query.username || !argv.query.projectId)
+    if (!argv.data.username || !argv.data.projectId)
       return done(new Error('Missing username or projectId '));
 
     return seneca.make$('note')

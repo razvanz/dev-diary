@@ -1,0 +1,32 @@
+<div>
+  <paper-material>
+    <paper-item>
+      <h3>Add some details about your new project:</h3>
+    </paper-item>
+    <paper-item layout horizontal>
+      <form class="flex"  method="post" action="/api/v1.0/project">
+        <br>
+        <br>
+        <paper-item class="flex">
+          <paper-input name="name" label="Name" required></paper-input>
+        </paper-item>
+        <br>
+        <paper-item class="flex">
+          <span>And a description:</span>
+        </paper-item>
+        <paper-item>
+          <iron-autogrow-textarea class="flex" name="description" id="a1">
+            <textarea class="flex" name="description" id="t1" style="width: 600px; height: 100px; font-size:15px;"></textarea>
+          </iron-autogrow-textarea>
+        </paper-item>
+
+        <br>
+        <paper-item>
+          <paper-button id="save-project" class="submit-btn" raised onclick="addProject(event)">Save</paper-button>
+        </paper-item>
+        <br>
+      </form>
+    </paper-item>
+
+  </paper-material>
+</div>

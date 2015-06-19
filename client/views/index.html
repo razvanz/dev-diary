@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+{% block content %}
+<head>
+  <!-- General META -->
+  <meta charset="utf-8">
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- Semantic META -->
+  <meta name="keywords" content="{{keywords}}">
+  <meta name="description" content="{{description}}">
+
+
+  <title>{{title}}</title>
+
+  <!--Application CSS Files-->
+  {% for cssFile in resources.css %}
+  <link rel="stylesheet" href="{{cssFile}}">
+  {% endfor %}
+
+  <!--Application JS Files-->
+  {% for jsFile in resources.js %}
+  <script type="text/javascript" src="{{jsFile}}"></script>
+  {% endfor %}
+
+  <!--Polymer Files-->
+  {% for tmplFile in resources.tmpl %}
+  <link rel="import" href="{{tmplFile}}">
+  {% endfor %}
+
+</head>
+
+<body unresolved>
+  <div class="loading splash-spinner">
+    <i class="fa fa-spinner fa-spin fa-4x"></i>
+  </div>
+  <div class="full-height" ui-view></div>
+</body>
+{% endblock %}

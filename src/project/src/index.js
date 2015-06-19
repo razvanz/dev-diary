@@ -11,66 +11,72 @@ module.exports = function (options) {
 
   seneca.add({
     role: plugin,
-    cmd: 'list'
+    cmd: 'list',
+    query: {}
   }, listProjects);
 
   seneca.add({
     role: plugin,
     cmd: 'create',
-
     data: {}
   }, createProject);
 
   seneca.add({
     role: plugin,
     cmd: 'load',
-
-    query: {
-      id: ''
-    }
+    query: {}
   }, loadProject);
 
   seneca.add({
     role: plugin,
     cmd: 'update',
-
     data: {}
   }, updateProject);
 
   seneca.add({
     role: plugin,
     cmd: 'remove',
-
-    query: {
-      id: ''
-    }
+    query: {}
   }, removeProject);
 
   function listProjects(argv, done) {
-    console.log('List projects');
+    if (!argv.query.username)
+      return done(new Error('Invalid username'));
+
     return seneca.make$('project')
       .list$(argv.query, done);
   }
 
   function createProject(argv, done) {
+    if (!argv.data.username)
+      return done(new Error('Invalid username'));
 
     var project = seneca.make$('project');
 
     project = _.assign(project, argv.data, {
-      id: uuid.v4()
+      id: uuid.v1()
     });
 
     return project.save$(done);
   }
 
   function loadProject(argv, done) {
+    if (!argv.query.username)
+      return done(new Error('Invalid username'));
+
     return seneca.make$('project')
       .load$(argv.query, done);
   }
 
   function updateProject(argv, done) {
+    if (!argv.data.username)
+      return done(new Error('Invalid username'));
+
     return seneca.make$('project')
-      .load$(argv.data, function (err, project) {
+      .load$({
+        id: argv.data.id,
+        username: argv.data.username
+      }, function (err, project) {
         if (err)
           return done(err);
         else {
@@ -82,6 +88,9 @@ module.exports = function (options) {
   }
 
   function removeProject(argv, done) {
+    if (!argv.query.username)
+      return done(new Error('Invalid username'));
+
     return seneca.make$('project')
       .remove$(argv.query, done);
   }

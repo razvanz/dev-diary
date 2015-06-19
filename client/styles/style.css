@@ -1,0 +1,36 @@
+:host {
+  display: block;
+}
+.nav {
+  border-right: 1px solid #ccc;
+}
+.main {
+  background-color: #eee;
+}
+paper-toolbar {
+  background-color: #42A5F5;
+}
+#main-view {
+  padding: 30px 16px;
+}
+paper-material {
+  max-width: 900px;
+  margin: 5px auto;
+  background-color: #fafafa;
+}
+#add-project paper-material {
+  margin: 30px;
+  background-color: #536dfe;
+  color: white;
+}
+#save-project paper-material {
+  background-color: #536dfe;
+  color: white;
+}
+.note-timestamp {
+  border: none;
+  box-shadow: none !important;
+  background-color: #EEEEEE;
+  margin: 20px auto 3px;
+  max-width: 900px;
+}

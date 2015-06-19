@@ -3,11 +3,15 @@
 var path = require('path');
 
 require('seneca')()
-  .use('rabbitmq-transport')
   .use('jsonfile-store', {
     folder: path.resolve('src/project', 'data')
   })
   .use('./src/')
+  .use('rabbitmq-transport')
   .listen({
-    type: 'rabbitmq'
+    type: 'rabbitmq',
+    pin: {
+      role: 'project',
+      cmd: '*'
+    }
   });

@@ -1,0 +1,18 @@
+<div ng-if="notes.data && notes.data.length">
+  <div ng-repeat="note in notes.data">
+    <paper-material class="note-timestamp">
+      <div class="flex">{{note.timestamp}}</div>
+    </paper-material>
+    <paper-material>
+      <paper-item>{{note.contents}}</paper-item>
+    </paper-material>
+  </div>
+</div>
+
+<div ng-if="!(notes.data && notes.data.length)">
+  <paper-material>
+    <paper-item>
+      Nothing to see here! Start by creating a note.
+    </paper-item>
+  </paper-material>
+</div>

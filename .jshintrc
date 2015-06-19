@@ -27,5 +27,7 @@
     "trailing": true,
     "undef": true,
     "unused": true,
-    "globals": {}
+    "globals": {
+      "angular": true
+    }
 }

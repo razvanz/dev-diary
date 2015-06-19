@@ -4,7 +4,13 @@ module.exports = function (app) {
 
   app.all('/api/v1.0/*',
     function (req, res, next) {
-      console.log('Authentication + authorisation');
+      if (req.isAuthenticated()) {
+        return next();
+      } else {
+        return res.redirect('/login');
+      }
+    },
+    function (req, res, next) {
       return next('route');
     });
 

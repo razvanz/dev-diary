@@ -1,0 +1,12 @@
+<paper-header-panel class="nav" drawer>
+  <paper-toolbar>
+    <div class="title">Projects</div>
+  </paper-toolbar>
+  <paper-menu>
+    <paper-item ng-repeat="project in main.projects">
+      <paper-item height="100%" width="100%" tabindex="0" class="core-selected">
+        <a href ui-sref="app.notes({id: {{project.id}}})">{{project.name}}</a>
+      </paper-item>
+    </paper-item>
+  </paper-menu>
+</paper-header-panel>

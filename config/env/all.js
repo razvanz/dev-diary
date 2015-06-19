@@ -32,27 +32,31 @@ module.exports = {
     assets: {
       lib: {
         css: [],
-        js: ['./client/bower_components/webcomponentsjs/webcomponents.js'],
+        js: [
+          './client/bower_components/angular/angular.min.js',
+          './client/bower_components/ui-router/release/angular-ui-router.min.js',
+          './client/bower_components/webcomponentsjs/webcomponents.js'],
         tmpl: [
-        './client/bower_components/polymer/polymer.html',
-        './client/bower_components/core-header-panel/core-header-panel.html',
-        './client/bower_components/core-drawer-panel/core-drawer-panel.html',
-        './client/bower_components/core-toolbar/core-toolbar.html',
-        './client/bower_components/core-pages/core-pages.html',
-        './client/bower_components/core-menu/core-menu.html',
-        './client/bower_components/core-icons/core-icons.html',
-        './client/bower_components/core-item/core-item.html',
-        './client/bower_components/paper-icon-button/paper-icon-button.html',
-        './client/bower_components/paper-menu-button/paper-menu-button.html',
-        './client/bower_components/paper-dropdown/paper-dropdown.html',
-        './client/bower_components/paper-item/paper-item.html',
-        './client/bower_components/paper-input/paper-input.html',
-        './client/bower_components/core-field/core-field.html'
-      ]
+          './client/bower_components/polymer/polymer.html',
+          './client/bower_components/paper-drawer-panel/paper-drawer-panel.html',
+          './client/bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html',
+          './client/bower_components/paper-toolbar/paper-toolbar.html',
+          './client/bower_components/iron-menu/iron-menu.html',
+          './client/bower_components/iron-icons/iron-icons.html',
+          './client/bower_components/paper-item/paper-item.html',
+          './client/bower_components/paper-icon-button/paper-icon-button.html',
+          './client/bower_components/paper-menu-button/paper-menu-button.html',
+          './client/bower_components/paper-material/paper-material.html',
+          './client/bower_components/paper-fab/paper-fab.html',
+          './client/bower_components/paper-button/paper-button.html',
+          './client/bower_components/paper-input/paper-input.html',
+          './client/bower_components/iron-flex-layout/iron-flex-layout.html',
+          './client/bower_components/iron-autogrow-textarea/iron-autogrow-textarea'
+        ]
       },
       app: {
         css: ['./client/styles/style.css'],
-        js: ['./client/scripts/*.js'],
+        js: ['./client/app/**/*.js'],
         tmpl: ['./client/elements/*.html']
       }
     }

@@ -10,67 +10,73 @@ module.exports = function (options) {
   options = seneca.util.deepextend({}, options || {});
 
   seneca.add({
-    role: plugin,
-    cmd: 'list'
+    'note': 'list'
   }, listNotes);
 
   seneca.add({
-    role: plugin,
-    cmd: 'create',
+    'note': 'create',
 
     data: {}
   }, createNote);
 
   seneca.add({
-    role: plugin,
-    cmd: 'load',
+    'note': 'load',
 
-    query: {
-      id: ''
-    }
+    query: {}
   }, loadNote);
 
   seneca.add({
-    role: plugin,
-    cmd: 'update',
+    'note': 'update',
 
     data: {}
   }, updateNote);
 
   seneca.add({
-    role: plugin,
-    cmd: 'remove',
+    'note': 'remove',
 
-    query: {
-      id: ''
-    }
+    query: {}
   }, removeNote);
 
   function listNotes(argv, done) {
-    console.log('List notes');
+    if (!argv.query.username || !argv.query.projectId)
+      return done(new Error('Missing username or projectId'));
+
     return seneca.make$('note')
       .list$(argv.query, done);
   }
 
   function createNote(argv, done) {
 
+    if (!argv.query.username || !argv.query.projectId)
+      return done(new Error('Missing username or projectId'));
+
     var note = seneca.make$('note');
 
     note = _.assign(note, argv.data, {
-      id: uuid.v4()
+      id: uuid.v1()
     });
 
     return note.save$(done);
   }
 
   function loadNote(argv, done) {
+    if (!argv.query.username || !argv.query.projectId)
+      return done(new Error('Missing username or projectId'));
+
     return seneca.make$('note')
       .load$(argv.query, done);
   }
 
   function updateNote(argv, done) {
+    if (!argv.query.username || !argv.query.projectId)
+      return done(new Error('Missing username or projectId '));
+
     return seneca.make$('note')
-      .load$(argv.data, function (err, note) {
+      .load$({
+        id: argv.data.id,
+        username: argv.data.username,
+        projectId: argv.data.projectId
+      }, function (err, note) {
         if (err)
           return done(err);
         else {
@@ -82,6 +88,9 @@ module.exports = function (options) {
   }
 
   function removeNote(argv, done) {
+    if (!argv.query.username || !argv.query.projectId)
+      return done(new Error('Missing username or projectId '));
+
     return seneca.make$('note')
       .remove$(argv.query, done);
   }

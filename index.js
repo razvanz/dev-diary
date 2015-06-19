@@ -4,7 +4,7 @@ var fs = require('fs'),
   spawn = require('child_process')
   .spawn;
 
-var services = ['project', 'note', 'devdiary-web'];
+var services = ['user', 'authentication', 'project', 'note', 'devdiary-web'];
 
 services.forEach(function (service) {
   var log = fs.createWriteStream('./log/' + service + '.log');

@@ -27,7 +27,8 @@ var _ = require('lodash'),
   path = require('path'),
   seneca = require('seneca')(),
   session = require('express-session'),
-  config = require('../../config/');
+  config = require('../../config/'),
+  passport = require('passport');
 
 var options = config.init();
 
@@ -39,12 +40,92 @@ seneca.use('options', options)
     }
   })
   .client({
-    type: 'rabbitmq'
+    type: 'rabbitmq',
+    pin: {
+      role: 'project',
+      cmd: '*'
+    }
+  })
+  .client({
+    type: 'rabbitmq',
+    pin: {
+      role: 'note',
+      cmd: '*'
+    }
+  })
+  .client({
+    type: 'rabbitmq',
+    pin: {
+      role: 'auth',
+      cmd: '*'
+    }
   })
   .ready(function () {
     /*
      * Configure
      */
+
+    var seneca = this;
+    //
+    // setTimeout(function () {
+    //   seneca.act({
+    //     role: 'auth',
+    //     cmd: 'register',
+    //
+    //     data: {
+    //       email: 'razvan.laurus@gmail.com',
+    //       username: 'razvan',
+    //       password: 'q1w2Q!W@'
+    //     }
+    //   }, function (err, me) {
+    //     console.log('Successfuly registered');
+    //     console.log(me);
+    //   });
+    // }, 2000);
+
+    // setTimeout(function () {
+    //   seneca.act({
+    //     role: 'project',
+    //     cmd: 'create',
+    //
+    //     data: {
+    //       username: 'razvan',
+    //       name: 'Devdiary',
+    //       description: 'A web application aimed to help developers to better keep track of their work.'
+    //     }
+    //   }, function (err, me) {
+    //     console.log('Successfuly registered');
+    //     console.log(me);
+    //   });
+    //
+    //   seneca.act({
+    //     role: 'project',
+    //     cmd: 'create',
+    //
+    //     data: {
+    //       username: 'razvan',
+    //       name: 'Sample Project',
+    //       description: 'Nothing to see here. This is just a test.'
+    //     }
+    //   }, function (err, me) {
+    //     console.log('Successfuly registered');
+    //     console.log(me);
+    //   });
+    //
+    //   seneca.act({
+    //     role: 'project',
+    //     cmd: 'create',
+    //
+    //     data: {
+    //       username: 'razvan',
+    //       name: 'Sample Project no 2',
+    //       description: 'Nothing to see here either. Just a test.'
+    //     }
+    //   }, function (err, me) {
+    //     console.log('Successfuly registered');
+    //     console.log(me);
+    //   });
+    // });
 
     var app = express();
 
@@ -94,13 +175,15 @@ seneca.use('options', options)
     // Use helmet to secure Express headers
     app.use(helmet.hsts(options.main.hsts));
     app.use(helmet.ieNoOpen());
-    app.use(helmet.frameguard('deny'));
+    app.use(
+      helmet.frameguard('deny'));
     app.use(helmet.xssFilter({
       setOnOldIE: true
     }));
     app.use(helmet.noSniff());
     app.use(helmet.xframe());
-    app.disable('x-powered-by');
+    app.disable(
+      'x-powered-by');
 
     // View cache + logger based on environment
     if (process.env.NODE_ENV === 'production') {
@@ -110,15 +193,29 @@ seneca.use('options', options)
       app.use(morgan('dev'));
     }
 
+    app.use(favicon(path.resolve(options.main.public + '/images/favicon.ico')));
+
+    // Set swig as the template engine
+    // Set views path and view engine
+    app.engine('html', consolidate[options.main.templateEngine]);
+    app.set(
+      'views', path.resolve(options.main.public + '/views'));
+    app.set(
+      'view engine', 'html');
+
+    // Serve static
+    app.use(express.static(path.resolve(options.main.public)));
+
     // Session storage
     app.use(session(_.assign(options.main.session, {
       store: undefined // replace with a store
     })));
 
-    // // Not sure how this plays with seneca
-    // // use passport session
-    // app.use(passport.initialize());
-    // app.use(passport.session());
+    // Not sure how this plays with seneca
+    // use passport session
+    require('./src/passport/')(seneca);
+    app.use(passport.initialize());
+    app.use(passport.session());
 
     // Cross-site request forgery
     // app.use('/api/', csrf({
@@ -130,27 +227,29 @@ seneca.use('options', options)
     //   }
     // }));
 
-    app.use(favicon(path.resolve(options.main.public + '/images/favicon.ico')));
-
-    // Set swig as the template engine
-    // Set views path and view engine
-    app.engine('html', consolidate[options.main.templateEngine]);
-    app.set('views', path.resolve(options.main.public + '/views'));
-    app.set('view engine', 'html');
-
-    // Serve static
-    app.use(express.static(path.resolve(options.main.public)));
-
     app.use(seneca.export('web'));
 
     require('./src/routes/')(app);
+
+    app.use(function (err, req, res, next) {
+      if (!res.headerSend) {
+        if (err.statusCode || !res.statusCode)
+          res.status(err.statusCode || 500);
+
+        return res.jsonp({
+          message: err.message
+        });
+      }
+    });
 
     // Start the app
     app.listen(options.main.port);
 
     console.log('--');
     console.log('Server started!');
-    console.log('Environment:\t\t\t' + process.env.NODE_ENV);
-    console.log('Port:\t\t\t\t' + options.main.port);
+    console.log(
+      'Environment:\t\t\t' + process.env.NODE_ENV);
+    console.log(
+      'Port:\t\t\t\t' + options.main.port);
     console.log('--');
   });

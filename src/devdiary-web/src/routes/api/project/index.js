@@ -5,12 +5,12 @@ var _ = require('lodash');
 module.exports = function (app) {
 
   app.all('/api/v1.0/project(/*)?', function (req, res, next) {
-    console.log('Authorize project');
+    // console.log('Authorize project');
     return next('route');
   });
 
   app.all('/api/v1.0/project/:projectId*', function (req, res, next) {
-    console.log('Authorize projectId');
+    // console.log('Authorize projectId');
     return next('route');
   });
 
@@ -18,7 +18,11 @@ module.exports = function (app) {
     .get(function (req, res, next) {
       return req.seneca.act({
         role: 'project',
-        cmd: 'list'
+        cmd: 'list',
+
+        query: {
+          username: req.user.username
+        }
       }, function (err, projects) {
         if (err)
           return next(err);
@@ -28,10 +32,15 @@ module.exports = function (app) {
       });
     })
     .post(function (req, res, next) {
+      console.log(req.body);
+
       return req.seneca.act({
         role: 'project',
         cmd: 'create',
-        data: _.assign({}, req.body)
+
+        data: _.assign({
+          username: req.user.username
+        }, req.body)
       }, function (err, project) {
         if (err)
           return next(err);
@@ -43,11 +52,13 @@ module.exports = function (app) {
 
   app.route('/api/v1.0/project/:projectId')
     .get(function (req, res, next) {
-      return req.seneca.act({
+      return req.seneca.act('project: load', {
         role: 'project',
         cmd: 'load',
+
         query: {
-          id: req.params.projectId
+          id: req.params.projectId,
+          username: req.user.username
         }
       }, function (err, project) {
         if (err)
@@ -58,11 +69,13 @@ module.exports = function (app) {
       });
     })
     .put(function (req, res, next) {
-      return req.seneca.act({
+      return req.seneca.act('project: update', {
         role: 'project',
         cmd: 'update',
+
         data: _.assign(req.body, {
-          id: req.params.projectId
+          id: req.params.projectId,
+          username: req.user.username
         })
       }, function (err, project) {
         if (err)
@@ -73,11 +86,13 @@ module.exports = function (app) {
       });
     })
     .delete(function (req, res, next) {
-      return req.seneca.act({
-        role: 'project',
+      return req.seneca.act('project: remove', {
+        role: 'proejct',
         cmd: 'remove',
+
         query: {
-          id: req.params.projectId
+          id: req.params.projectId,
+          username: req.user.username
         }
       }, function (err) {
         if (err)

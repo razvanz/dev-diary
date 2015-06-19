@@ -1,0 +1,81 @@
+{% extends 'layout.html' %} {% block content %}
+
+<head>
+  <!-- General META -->
+  <meta charset="utf-8">
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- Semantic META -->
+  <meta name="keywords" content="{{keywords}}">
+  <meta name="description" content="{{description}}">
+
+
+  <title>{{title}}</title>
+
+  <!--Application CSS Files-->
+  {% for cssFile in resources.css %}
+  <link rel="stylesheet" href="{{cssFile}}"> {% endfor %}
+
+  <link rel="import" href="bower_components/iron-form/iron-form.html">
+  <link rel="import" href="bower_components/paper-input/paper-input.html">
+  <link rel="import" href="bower_components/paper-button/paper-button.html">
+  <link rel="import" href="bower_components/paper-styles/paper-styles.html">
+
+  <style>
+    #loginForm {
+      width: 200px;
+    }
+
+    .error {
+      color: #e51c23;
+    }
+
+    .paper-button {
+      height: 20px !important;
+      background-color: #536dfe;
+      color: white;
+    }
+
+    .submit-btn {
+      float: right;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="horizontal center-center layout">
+    <div class="horizontal-section">
+      <form id="loginForm" method="post" action="/register">
+        <br>
+        <br>
+        {% for error in errors %}
+        <div class="error">{{error.message}}</div>
+        {% endfor %}
+        <br>
+        <br>
+        <paper-input type="email" name="email" label="Email" required></paper-input>
+        <br>
+        <paper-input name="username" label="Username" required></paper-input>
+        <br>
+        <br>
+        <paper-input type="password" name="password" label="Password"
+        required></paper-input>
+        <br>
+        <br>
+        <paper-button class="submit-btn" raised onclick="clickHandler(event)">
+          Submit
+        </paper-button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function clickHandler(event) {
+      console.log(Polymer.dom(event).localTarget.parentElement);
+      Polymer.dom(event).localTarget.parentElement.submit();
+    }
+  </script>
+</body>
+{% endblock %}
